@@ -1,5 +1,6 @@
 
 const playerScoreEl = document.getElementById('playerScore');
+const resetBtn = document.getElementById('reset');
 const playerChoiceEl = document.getElementById('playerChoice');
 const playerChoiceall= document.getElementById('player');
 const computerScoreEl = document.getElementById('computerScore');
@@ -17,16 +18,136 @@ const computerScissors = document.getElementById('computerScissors');
 const computerLizard = document.getElementById('computerLizard');
 const computerSpock = document.getElementById('computerSpock');
 
-//const allGameIcons = document.querySelectorAll('.far');
+const allGameIcons = document.querySelectorAll('.far');
 const resultText = document.getElementById('resultText');
 
 const choices = {
-  rock: { name: 'Rock', defeats: ['scissors', 'lizard'] },
-  paper: { name: 'Paper', defeats: ['rock', 'spock'] },
-  scissors: { name: 'Scissors', defeats: ['paper', 'lizard'] },
-  lizard: { name: 'Lizard', defeats: ['paper', 'spock'] },
-  spock: { name: 'Spock', defeats: ['scissors', 'rock'] },
+  Rock: { name: 'Rock', defeats: ['Scissors', 'Lizard'] },
+  Paper: { name: 'Paper', defeats: ['Rock', 'Spock'] },
+  Scissors: { name: 'Scissors', defeats: ['Paper', 'Lizard'] },
+  Lizard: { name: 'Lizard', defeats: ['Paper', 'Spock'] },
+  Spock: { name: 'Spock', defeats: ['Scissors', 'Rock'] },
 };
+
+let playerScoreNumber = 0;
+let computerScoreNumber = 0;
+let computerChoice = '';
+
+
+//reset all 'selected' icon
+function resetSelected(){
+  allGameIcons.forEach((icon) =>{
+    icon.classList.remove('selected');
+
+  });
+}
+
+//reset score and playerchoice/computer choice
+function resetAll(){
+  playerScoreNumber = 0;
+  computerScoreNumber = 0;
+  computerChoiceEl.textContent = '';
+  computerScoreEl.textContent = computerScoreNumber;
+  playerChoiceEl.textContent = playerScoreNumber;
+  playerScoreEl.textContent = "";
+  resultText.textContent= "";
+  resetSelected();
+}
+
+
+//random computer choice
+function computerRandomChoice(){
+  const computerChoiceNumber = Math.random();
+  if(computerChoiceNumber < 0.2){
+    computerChoice = "Rock";
+  }
+  else if(computerChoiceNumber <= 0.4){
+    computerChoice = "Paper";
+  }
+  else if(computerChoiceNumber <= 0.6){
+    computerChoice = "Scissors";
+  }
+  else if(computerChoiceNumber <= 0.8){
+    computerChoice = "Lizard";
+  }
+  else {
+    computerChoice = "Spock";
+  }
+ //console.log('computerrandomchoice:', computerChoice)
+}
+//add 'selected' styling and computer choice
+function displayComputerChoice () { 
+
+
+  
+   switch(computerChoice) {
+    case "Rock" :
+      computerRock.classList.add('selected');
+      computerChoiceEl.textContent = '---Rock';
+      break;
+
+    case 'Paper':
+      computerPaper.classList.add('selected');
+      computerChoiceEl.textContent = '---Paper';
+      break;
+
+    case 'Scissors':
+      computerScissors.classList.add('selected');
+      computerChoiceEl.textContent = '---Scissors';
+      break;
+
+    case 'Lizard':
+      computerLizard.classList.add('selected');
+      computerChoiceEl.textContent = '---Lizard';
+      break;
+      
+    case 'Spock':
+      computerSpock.classList.add('selected');
+      computerChoiceEl.textContent = '---Spock';
+      break;
+      
+    default:
+      //console.log('computerChoice')
+      break;
+
+  }  
+    };
+
+//check result, increase scores, update resultText
+function updateScore(clickedicon){
+   //console.log('current:',clickedicon, computerChoice)
+   if(clickedicon === computerChoice){
+     resultText.textContent = "It's a tie!";
+   }else{
+    const choice = choices[clickedicon];
+    //console.log("value", choice.defeats.indexOf(computerChoice));
+
+    if(choice.defeats.indexOf(computerChoice) > -1){
+      //console.log("value", choice.defeats.indexOf(computerChoice));
+      resultText.textContent= "You Won!";
+      playerScoreNumber++;
+      playerScoreEl.textContent = playerScoreNumber;
+    }else{
+      resultText.textContent= "You Lose!";
+      computerScoreNumber++;
+      computerScoreEl.textContent = computerScoreNumber;
+
+    }
+
+   }
+}
+
+
+//call functions to process turn
+function checkResult(clickedicon){
+
+  resetSelected();
+  computerRandomChoice();
+  //displayComputerChoice();
+  updateScore(clickedicon);
+  
+}
+
 
 // passing player selection value and styling icons
 
@@ -36,32 +157,33 @@ const choices = {
 // }
 var icon = document.querySelectorAll("i")
 
+function myselect (playerChoice) {
+  var clickedicon = playerChoice.target.title;
+  checkResult(clickedicon);
+  
 
-function myselect (event) {
-  var clickedicon = event.target;
-   switch(clickedicon.id) {
-    case "playerRock" :
-      console.log('hello')
+   switch(clickedicon) {
+    case "Rock" :
       playerRock.classList.add('selected');
       playerChoiceEl.textContent = '---Rock';
       break;
 
-    case 'playerPaper':
+    case 'Paper':
       playerPaper.classList.add('selected');
       playerChoiceEl.textContent = '---Paper';
       break;
 
-    case 'playerScissors':
+    case 'Scissors':
       playerScissors.classList.add('selected');
       playerChoiceEl.textContent = '---Scissors';
       break;
 
-    case 'playerLizard':
+    case 'Lizard':
       playerLizard.classList.add('selected');
       playerChoiceEl.textContent = '---Lizard';
       break;
       
-    case 'playerSpock':
+    case 'Spock':
       playerSpock.classList.add('selected');
       playerChoiceEl.textContent = '---Spock';
       break;
@@ -69,6 +191,21 @@ function myselect (event) {
       break;
 
   }  
-    };
+  // console.log(clickedicon.title)
+
+  if( clickedicon.title == ''){
+    //console.log('if statement')
+    return;
+  }else{
+    displayComputerChoice();
+  } 
+  console.log(clickedicon)
+};
+    
+//on startup set initial values
+
 
 playerChoiceall.addEventListener("click", myselect);
+resetBtn.addEventListener("click", resetAll )
+window.onload = function() { resetAll();};
+
