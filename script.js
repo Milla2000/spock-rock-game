@@ -1,3 +1,4 @@
+import { startConfetti, stopConfetti, removeConfetti } from './confetti.js';
 
 const playerScoreEl = document.getElementById('playerScore');
 const resetBtn = document.getElementById('reset');
@@ -38,8 +39,9 @@ let computerChoice = '';
 function resetSelected(){
   allGameIcons.forEach((icon) =>{
     icon.classList.remove('selected');
-
   });
+  stopConfetti();
+  removeConfetti();
 }
 
 //reset score and playerchoice/computer choice
@@ -123,11 +125,12 @@ function updateScore(clickedicon){
     //console.log("value", choice.defeats.indexOf(computerChoice));
 
     if(choice.defeats.indexOf(computerChoice) > -1){
-      //console.log("value", choice.defeats.indexOf(computerChoice));
+      startConfetti(900);
       resultText.textContent= "You Won!";
       playerScoreNumber++;
       playerScoreEl.textContent = playerScoreNumber;
     }else{
+      stopConfetti()
       resultText.textContent= "You Lose!";
       computerScoreNumber++;
       computerScoreEl.textContent = computerScoreNumber;
@@ -155,7 +158,7 @@ function checkResult(clickedicon){
 // myLink.onclick = function (){
 //      console.log()
 // }
-var icon = document.querySelectorAll("i")
+
 
 function myselect (playerChoice) {
   var clickedicon = playerChoice.target.title;
@@ -199,7 +202,7 @@ function myselect (playerChoice) {
   }else{
     displayComputerChoice();
   } 
-  console.log(clickedicon)
+  //console.log(clickedicon)
 };
     
 //on startup set initial values
@@ -208,4 +211,5 @@ function myselect (playerChoice) {
 playerChoiceall.addEventListener("click", myselect);
 resetBtn.addEventListener("click", resetAll )
 window.onload = function() { resetAll();};
+
 
